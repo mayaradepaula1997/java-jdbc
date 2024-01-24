@@ -45,8 +45,8 @@ public class Department implements Serializable { // para que nosso objetos poss
 
     @Override
     public String toString() {
-        return "Department" +
-                "id=" + id +
+        return "Department:"
+               + " id=" + id +
                 ", name=" + name;
     }
 }
