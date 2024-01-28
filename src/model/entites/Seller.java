@@ -1,8 +1,13 @@
+package model.entites;
+
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 
 public class Seller  implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
     private Integer id;
     private String name;
     private String email;
@@ -47,8 +52,8 @@ public class Seller  implements Serializable {
         this.email = email;
     }
 
-    public Date getBirthDate() {
-        return birthDate;
+    public Date getBirthDate(java.sql.Date birthDate) {
+        return this.birthDate;
     }
 
     public void setBirthDate(Date birthDate) {
@@ -85,7 +90,7 @@ public class Seller  implements Serializable {
 
     @Override
     public String toString() {
-        return "Seller:" +
+        return "model.entites.Seller:" +
                 "id=" + id +
                 ", name=" + name +
                 ", email=" + email +

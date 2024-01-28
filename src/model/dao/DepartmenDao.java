@@ -1,3 +1,7 @@
+package model.dao;
+
+import model.entites.Department;
+
 import java.util.List;
 
 public interface DepartmenDao {
