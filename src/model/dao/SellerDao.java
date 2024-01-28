@@ -1,5 +1,6 @@
 package model.dao;
 
+import model.entites.Department;
 import model.entites.Seller;
 
 import java.util.List;
@@ -15,6 +16,8 @@ public interface SellerDao {
 
 
     List<Seller> findAll();//responsaval por retorna todos os departamentos
+
+    List<Seller> findByDepartament (Department department);
 
 }
 
