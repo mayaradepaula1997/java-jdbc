@@ -6,14 +6,12 @@ import model.dao.SellerDao;
 import model.entites.Department;
 import model.entites.Seller;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 
 //Para indicar que essa classe vai ser uma implementação JDBC do me "model.Dao.SellerDao"
 public class SellerDaoJDBC implements SellerDao {
@@ -27,6 +25,41 @@ public class SellerDaoJDBC implements SellerDao {
     @Override
     public void insert(Seller obj) {
 
+        PreparedStatement st = null;
+        try{
+            st=conn.prepareStatement(
+                    "INSERT INTO seller "
+                            + "(Name, Email, BirthDate, BaseSalary, DepartmentId) "
+                            + "VALUES "
+                            + "(?, ?, ?, ?, ?)",
+                    Statement.RETURN_GENERATED_KEYS); // generetaKeys gera uma chave unica pro usuario, com o ID unico
+            st.setString(1, obj.getName()); // o nome vai ser do Obj que chegou como parametro
+            st.setString(2,obj.getEmail());
+            st.setDate(3, new java.sql.Date(obj.getBirthDate().getTime()));
+            st.setDouble(4, obj.getBaseSalary());
+            st.setInt(5, obj.getDepartment().getId());
+
+            int rowsAffeccted = st.executeUpdate(); // executar comando (SQL)
+
+            if (rowsAffeccted > 0) {
+                ResultSet rs = st.getGeneratedKeys();
+                if (rs.next()){
+                 int id = rs.getInt(1);
+                 obj.setId(id);
+
+                }
+                DB.closeResultSet(rs);
+            }
+            else {
+                throw new DbException("Unexpected error! No rows affected!");
+            }
+        }
+        catch (SQLException e) {
+            throw new DbException(e.getMessage());
+        }
+        finally {
+            DB.closeStatement(st);
+        }
     }
 
     @Override
@@ -98,18 +131,19 @@ public class SellerDaoJDBC implements SellerDao {
             rs = st.executeQuery();
 
             List<Seller> list = new ArrayList<>();
-            Map<Integer, Department> map = new HashMap<>();
+            Map<Integer, Department> map = new HashMap<>(); //para controlar a não repetição do Departamento
 
             while (rs.next()) {
 
                 Department dep = map.get(rs.getInt("DepartmentId"));
+                //toda vez que passar por uma linha ResultSet, vai ser testado (map.get) se o departamento ja existe
 
-                if (dep == null) {
-                    dep = instantiateDepartment(rs);
-                    map.put(rs.getInt("DepartmentId"), dep);
+                if (dep == null) { //se não
+                    dep = instantiateDepartment(rs); // ai sim, vou instanciar ele
+                    map.put(rs.getInt("DepartmentId"), dep); //(map.put) salva dentro do meu Map
                 }
 
-                Seller obj = instantiateSeller(rs, dep);
+                Seller obj = instantiateSeller(rs, dep); // instancia todos os vendedores, sem a repetição do Departamento
                 list.add(obj);
             }
             return list;
