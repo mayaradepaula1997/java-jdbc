@@ -1,6 +1,7 @@
 package model.dao;//Classe auxiliar, responsavel por INSTANCIAR os meus DAOS
 
 import db.DB;
+import model.dao.impl.DepartmentDaoJDBC;
 import model.dao.impl.SellerDaoJDBC;
 
 public class DaoFactory { //operaçoes estaticas para instanciar os DAOS
@@ -9,6 +10,9 @@ public class DaoFactory { //operaçoes estaticas para instanciar os DAOS
 
         return new SellerDaoJDBC(DB.getConnection()); // obrigatorio passar a conexão como argumento
 
+    }
+    public static DepartmenDao createDepartmentDao(){
+        return new DepartmentDaoJDBC(DB.getConnection());
     }
 
     // EXPOR UM MÉTODO QUE RETORNA O TIPO DA INTERFACE, MAS INTERNAMENTE
