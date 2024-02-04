@@ -1,13 +1,16 @@
 package model.dao;
 
 import model.entites.Department;
+import model.entites.Seller;
 
 import java.util.List;
 
 public interface DepartmenDao {
 
     void insert (Department obj); // responsavel por inserir no banco de dados esse obj
-    void updat (Department obj);
+
+    void update(Department obj);
+
     void deleteById (Integer id);
 
     Department findById (Integer id);
@@ -17,4 +20,6 @@ public interface DepartmenDao {
 
     List <Department> findAll();
     //responsaval por retorna todos os departamentos
+
+
 }
